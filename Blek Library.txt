@@ -15,7 +15,7 @@ local UserInputService = game:GetService("UserInputService")
 
 function Library:Create(table)
     local windowName = table.Name
-    local uiSize = table.Size or UDim2.fromOffset(500, 350)
+    local uiSize = table.Size or UDim2.fromOffset(500, 340)
     local themeName = table.Theme or "Blue"
     local transparency = table.Transparency or false
 
@@ -445,11 +445,13 @@ function Library:Create(table)
             uICorner6.CornerRadius = UDim.new(0, 3)
             uICorner6.Parent = frame1
 
-            local knob = Instance.new("Frame")
+            local knob = Instance.new("TextButton")
             knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             knob.Size = UDim2.fromOffset(12, 12)
             knob.Position = UDim2.fromScale(((default - min) / (max - min)), 0.5)
             knob.AnchorPoint = Vector2.new(0.5, 0.5)
+            knob.Text = ""
+            knob.AutoButtonColor = false
             knob.Parent = frame
 
             local uICornerKnob = Instance.new("UICorner")
@@ -460,23 +462,21 @@ function Library:Create(table)
             textLabel2.Font = Enum.Font.Gotham
             textLabel2.Text = tostring(default)
             textLabel2.TextColor3 = theme.ElementText
-            textLabel2.TextSize = 10
+            textLabel2.TextSize = 8
             textLabel2.BackgroundTransparency = 1
-            textLabel2.Position = UDim2.fromScale(((default - min) / (max - min)), -0.5)
+            textLabel2.Position = UDim2.fromScale(((default - min) / (max - min)), -1.2)
             textLabel2.Size = UDim2.fromOffset(20, 10)
             textLabel2.TextXAlignment = Enum.TextXAlignment.Center
             textLabel2.Parent = frame
 
             local dragging = false
 
-            frame.InputBegan:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    dragging = true
-                    slider.BackgroundColor3 = theme.ElementActive
-                end
+            knob.MouseButton1Down:Connect(function()
+                dragging = true
+                slider.BackgroundColor3 = theme.ElementActive
             end)
 
-            frame.InputEnded:Connect(function(input)
+            UserInputService.InputEnded:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     dragging = false
                     slider.BackgroundColor3 = theme.ElementBackground
@@ -491,7 +491,7 @@ function Library:Create(table)
                     textLabel2.Text = tostring(value)
                     frame1.Size = UDim2.fromOffset(percentage * 90, 6)
                     knob.Position = UDim2.fromScale(percentage, 0.5)
-                    textLabel2.Position = UDim2.fromScale(percentage, -0.5)
+                    textLabel2.Position = UDim2.fromScale(percentage, -1.2)
                     callback(value)
                 end
             end)
